@@ -79,14 +79,19 @@
         .menu-toggle span{width:20px;height:2px;background:#fff;border-radius:2px}
         .menu-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:1000;display:none}
         .menu-overlay.active{display:block}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:1100;justify-content:center;align-items:center}
+        /* MODAL DENGAN FITUR ZOOM DAN DRAG */
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:1100;justify-content:center;align-items:center}
         .modal.active{display:flex}
-        .modal-content{background:#fff;padding:20px;border-radius:20px;max-width:400px;width:90%;text-align:center;max-height:85vh;overflow-y:auto;border:1px solid #a5d6a7;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+        .modal-content{background:#fff;padding:20px;border-radius:20px;max-width:450px;width:90%;text-align:center;max-height:85vh;overflow-y:auto;border:1px solid #a5d6a7;box-shadow:0 10px 30px rgba(0,0,0,.2)}
         .modal-close{float:right;font-size:24px;cursor:pointer;color:#666;transition:all .2s}
         .modal-close:hover{color:#1b5e3f}
         .modal-content h3{color:#1b5e3f;margin:8px 0 5px;font-size:1.2rem;border-bottom:2px solid #ffb703;display:inline-block;padding-bottom:4px}
-        .modal-product-image{width:100%;max-width:180px;height:auto;margin:8px auto;display:block;border-radius:14px;background:#e8f5e9;padding:8px;border:1px solid #a5d6a7}
-        .modal-product-image img{width:100%;height:auto;border-radius:10px}
+        /* GAMBAR ZOOMABLE - UKURAN 80% */
+        .modal-product-image{width:80%;max-width:300px;height:auto;margin:8px auto;display:block;border-radius:14px;background:#e8f5e9;padding:8px;border:1px solid #a5d6a7;overflow:auto;cursor:zoom-in}
+        .modal-product-image img{width:100%;height:auto;border-radius:10px;transition:transform .2s ease;display:block;margin:0 auto}
+        .modal-product-image.zoomed{cursor:zoom-out}
+        .modal-product-image.zoomed img{transform:scale(1.8);cursor:grab}
+        .modal-product-image.zoomed img:active{cursor:grabbing}
         .no-image-placeholder{background:#e8f5e9;color:#666;padding:30px;text-align:center;border-radius:10px;font-size:.8rem}
         #modalMessage{color:#333!important;text-align:left;margin:12px 0;line-height:1.6;font-size:.85rem;white-space:pre-line}
         .btn-pesan-modal{display:inline-block;background:#25D366;color:#fff;padding:10px 20px;border-radius:50px;text-decoration:none;font-weight:600;margin-top:12px;width:100%;text-align:center;transition:all .2s;border:none;cursor:pointer;font-size:.9rem}
@@ -242,13 +247,147 @@
     <div class="modal-content">
         <span class="modal-close">&times;</span>
         <h3 id="modalTitle"></h3>
-        <div id="modalImage" class="modal-product-image"><div class="no-image-placeholder">📷 Gambar produk</div></div>
+        <div id="modalImageContainer" class="modal-product-image">
+            <img id="modalImage" src="" alt="Gambar produk" style="width:100%; height:auto; border-radius:10px;">
+        </div>
         <div id="modalMessage"></div>
         <a href="#" id="modalWaLink" class="btn-pesan-modal" target="_blank">📞 Tanya Harga & Pesan via WhatsApp</a>
     </div>
 </div>
 
 <script>
+// ========== FITUR ZOOM DAN DRAG (Seperti Tokopedia) ==========
+let isZoomed = false;
+let isDragging = false;
+let startX, startY, scrollLeft, scrollTop;
+
+function initZoomFeature() {
+    const imageContainer = document.getElementById('modalImageContainer');
+    const modalImage = document.getElementById('modalImage');
+    
+    if (!imageContainer || !modalImage) return;
+    
+    // Klik untuk toggle zoom
+    imageContainer.addEventListener('click', function(e) {
+        if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
+        
+        if (!isZoomed) {
+            // Zoom in
+            modalImage.style.transform = 'scale(2)';
+            modalImage.style.cursor = 'grab';
+            imageContainer.style.cursor = 'zoom-out';
+            imageContainer.classList.add('zoomed');
+            isZoomed = true;
+        } else {
+            // Zoom out
+            modalImage.style.transform = 'scale(1)';
+            modalImage.style.cursor = 'default';
+            imageContainer.style.cursor = 'zoom-in';
+            imageContainer.classList.remove('zoomed');
+            imageContainer.scrollLeft = 0;
+            imageContainer.scrollTop = 0;
+            isZoomed = false;
+        }
+    });
+    
+    // Mouse down untuk drag (PC)
+    imageContainer.addEventListener('mousedown', function(e) {
+        if (!isZoomed) return;
+        isDragging = true;
+        startX = e.pageX - imageContainer.offsetLeft;
+        startY = e.pageY - imageContainer.offsetTop;
+        scrollLeft = imageContainer.scrollLeft;
+        scrollTop = imageContainer.scrollTop;
+        modalImage.style.cursor = 'grabbing';
+        e.preventDefault();
+    });
+    
+    // Mouse move untuk drag
+    window.addEventListener('mousemove', function(e) {
+        if (!isDragging || !isZoomed) return;
+        const x = e.pageX - imageContainer.offsetLeft;
+        const y = e.pageY - imageContainer.offsetTop;
+        const walkX = (x - startX);
+        const walkY = (y - startY);
+        imageContainer.scrollLeft = scrollLeft - walkX;
+        imageContainer.scrollTop = scrollTop - walkY;
+    });
+    
+    // Mouse up
+    window.addEventListener('mouseup', function() {
+        isDragging = false;
+        if (modalImage && isZoomed) modalImage.style.cursor = 'grab';
+    });
+    
+    // Touch events untuk HP (drag & zoom)
+    let initialDistance = 0;
+    let initialScale = 1;
+    
+    imageContainer.addEventListener('touchstart', function(e) {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            initialDistance = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX,
+                e.touches[0].pageY - e.touches[1].pageY
+            );
+            initialScale = isZoomed ? 2 : 1;
+        } else if (e.touches.length === 1 && isZoomed) {
+            // Single touch untuk drag di HP
+            const touch = e.touches[0];
+            startX = touch.pageX - imageContainer.offsetLeft;
+            startY = touch.pageY - imageContainer.offsetTop;
+            scrollLeft = imageContainer.scrollLeft;
+            scrollTop = imageContainer.scrollTop;
+            isDragging = true;
+        }
+    });
+    
+    imageContainer.addEventListener('touchmove', function(e) {
+        if (e.touches.length === 2 && initialDistance > 0) {
+            e.preventDefault();
+            const currentDistance = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX,
+                e.touches[0].pageY - e.touches[1].pageY
+            );
+            const scale = currentDistance / initialDistance;
+            let newScale = initialScale * scale;
+            newScale = Math.min(Math.max(1, newScale), 3);
+            
+            if (newScale > 1.05 && !isZoomed) {
+                modalImage.style.transform = `scale(${newScale})`;
+                modalImage.style.cursor = 'grab';
+                imageContainer.style.cursor = 'zoom-out';
+                imageContainer.classList.add('zoomed');
+                isZoomed = true;
+            } else if (newScale <= 1.05 && isZoomed) {
+                modalImage.style.transform = 'scale(1)';
+                modalImage.style.cursor = 'default';
+                imageContainer.style.cursor = 'zoom-in';
+                imageContainer.classList.remove('zoomed');
+                imageContainer.scrollLeft = 0;
+                imageContainer.scrollTop = 0;
+                isZoomed = false;
+            } else if (isZoomed) {
+                modalImage.style.transform = `scale(${newScale})`;
+            }
+        } else if (e.touches.length === 1 && isZoomed && isDragging) {
+            // Drag di HP
+            const touch = e.touches[0];
+            const x = touch.pageX - imageContainer.offsetLeft;
+            const y = touch.pageY - imageContainer.offsetTop;
+            const walkX = (x - startX);
+            const walkY = (y - startY);
+            imageContainer.scrollLeft = scrollLeft - walkX;
+            imageContainer.scrollTop = scrollTop - walkY;
+        }
+    });
+    
+    imageContainer.addEventListener('touchend', function() {
+        initialDistance = 0;
+        isDragging = false;
+    });
+}
+
 // ========== DATA PRODUK KATALOG (10 PRODUK) ==========
 const produkData = [
     { id:1, nama:"Box Catering TP 18x18", ukuranBox:"18 x 18 cm", bahan:"Duplek 310 Gr", isiPerPack:50, isiPerIkat:5, beratPerPack:2.5, beratPerIkat:12.5, jenis:"Tutup Pisah (TP)", gambar:"images/produk/produk-box-catering-tp18.jpg" },
@@ -277,25 +416,45 @@ function showProductModal(id){
     cp=produkData.find(p=>p.id===id); if(!cp) return;
     let m=document.getElementById('modal'), mt=document.getElementById('modalTitle'), mi=document.getElementById('modalImage'), mm=document.getElementById('modalMessage'), mw=document.getElementById('modalWaLink');
     mt.innerText=cp.nama;
-    mi.innerHTML=`<img src="${cp.gambar}" alt="${cp.nama}" onerror="this.src='https://placehold.co/500x500/1b5e3f/white?text=${cp.nama}'">`;
+    mi.src=cp.gambar;
+    mi.alt=cp.nama;
+    mi.onerror=function(){ this.src='https://placehold.co/500x500/1b5e3f/white?text='+cp.nama; };
     let txt=`📦 ${cp.nama}\n📏 Ukuran: ${cp.ukuranBox}\n📄 Bahan: ${cp.bahan}\n🔧 Model: ${cp.jenis}\n📦 Isi per Pack: ${cp.isiPerPack} pcs\n📦 Isi per Ikat: ${cp.isiPerIkat} pack = ${cp.isiPerIkat*cp.isiPerPack} pcs\n⚖️ Berat per Pack: ${cp.beratPerPack.toFixed(2)} kg\n⚖️ Berat per Ikat: ${cp.beratPerIkat} kg\n\n💡 Harga menyesuaikan harga kertas. Klik tombol di bawah untuk tanya harga & pesan.`;
     mm.innerHTML=txt.replace(/\n/g,'<br>');
     mw.onclick=(e)=>{ e.preventDefault(); window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(`Halo BungkusKita, saya tertarik dengan produk:\n${cp.nama}\n📏 Ukuran Box: ${cp.ukuranBox}\n📄 Bahan: ${cp.bahan}\n🔧 Model: ${cp.jenis}\n\nMohon info harga dan ketersediaan. Terima kasih.`)}`,'_blank'); };
     m.classList.add('active');
+    resetZoom();
+}
+
+function resetZoom() {
+    const modalImage = document.getElementById('modalImage');
+    const imageContainer = document.getElementById('modalImageContainer');
+    if (modalImage) {
+        modalImage.style.transform = 'scale(1)';
+        modalImage.style.cursor = 'default';
+    }
+    if (imageContainer) {
+        imageContainer.style.cursor = 'zoom-in';
+        imageContainer.classList.remove('zoomed');
+        imageContainer.scrollLeft = 0;
+        imageContainer.scrollTop = 0;
+    }
+    isZoomed = false;
+    isDragging = false;
 }
 
 // ========== INSPIRASI KEMASAN (10 PRODUK) ==========
 const contohData = [
-    { nama:"Martabak Manis", gambar:"images/contoh/contoh-martabak-manis.jpg", narasi:"Martabak manis legendaris dari Timur Tengah, populer di Indonesia. Rasa legit dengan topping meses, keju, kacang. Boks die cut tanpa lem menjaga kehangatan & tekstur." },
-    { nama:"Pisang Goreng Crispy", gambar:"images/contoh/contoh-pisang-goreng.jpg", narasi:"Pisang goreng crispy, camilan favorit semua kalangan. Kulit renyah, dalamnya manis lembut. Boks die cut tanpa lem menjaga kerenyahan lebih lama. Praktis untuk jualan pinggir jalan atau cafe." },
-    { nama:"Kue Dongkal", gambar:"images/contoh/contoh-kue-dongkal.jpg", narasi:"Kue dongkal / kue lumpur / kue pukis. Boks die cut ukuran pas, tanpa lem, tinggal lipat. Hemat waktu produksi, hasil rapi dan higienis." },
+    { nama:"Martabak Manis", gambar:"images/contoh/contoh-martabak-manis.jpg", narasi:"Martabak manis legendaris dari Timur Tengah, populer di Indonesia. Rasa legit dengan topping meses, keju, kacang. Kemasan lipat manual menjaga kehangatan & tekstur." },
+    { nama:"Pisang Goreng Crispy", gambar:"images/contoh/contoh-pisang-goreng.jpg", narasi:"Pisang goreng crispy, camilan favorit semua kalangan. Kulit renyah, dalamnya manis lembut. Kemasan lipat manual menjaga kerenyahan lebih lama. Praktis untuk jualan pinggir jalan atau cafe." },
+    { nama:"Kue Dongkal", gambar:"images/contoh/contoh-kue-dongkal.jpg", narasi:"Kue dongkal / kue lumpur / kue pukis. Kemasan lipat manual ukuran pas, tinggal lipat. Hemat waktu produksi, hasil rapi dan higienis." },
     { nama:"Kue Pia", gambar:"images/contoh/contoh-kue-pia.jpg", narasi:"Kue pia / kue kering. Desain elegan dengan warna natural. Model tutup sambung, mudah dibuka dan ditutup. Bahan Ivory memberikan kesan premium." },
     { nama:"Singkong Keju", gambar:"images/contoh/contoh-singkong-keju.jpg", narasi:"Singkong keju / singkong goreng. Bahan Kraft PE tahan minyak. Desain ventilasi kecil agar uap bisa keluar. Kemasan praktis untuk take away." },
     { nama:"Box Ayam Bakar", gambar:"images/contoh/contoh-ayam-bakar.jpg", narasi:"Ayam bakar / ayam geprek. Bahan Kraft PE tahan panas & minyak. Model tutup pisah, cocok untuk ayam bakar, nasi, dan sambal." },
     { nama:"Box Catering", gambar:"images/contoh/contoh-box-catering.jpg", narasi:"Nasi box catering. Bahan Duplek kuat dan kokoh. Desain custom sesuai brand. Model tutup sambung, rapi dan aman untuk dibawa." },
-    { nama:"Box Donat", gambar:"images/contoh/contoh-box-donat.jpg", narasi:"Donat 6 pcs / 12 pcs. Bahan Ivory putih bersih. Ada jendela plastik. Model die cut tanpa lem, tinggal lipat. Hemat biaya produksi!" },
+    { nama:"Box Donat", gambar:"images/contoh/contoh-box-donat.jpg", narasi:"Donat 6 pcs / 12 pcs. Bahan Ivory putih bersih. Ada jendela plastik. Kemasan lipat manual, tinggal lipat. Hemat biaya produksi!" },
     { nama:"Box Roti Bakar", gambar:"images/contoh/contoh-roti-bakar.jpg", narasi:"Roti bakar / sandwich. Desain modern dengan warna hitam atau coklat. Model tutup sambung, praktis untuk take away." },
-    { nama:"Fried Chicken", gambar:"images/contoh/contoh-fried-chicken.jpg", narasi:"Fried chicken, ayam goreng crispy favorit semua umur. Kulit renyah, daging empuk juicy. Boks die cut tanpa lem menjaga kerenyahan. Cocok untuk bisnis fast food atau cafe." }
+    { nama:"Fried Chicken", gambar:"images/contoh/contoh-fried-chicken.jpg", narasi:"Fried chicken, ayam goreng crispy favorit semua umur. Kulit renyah, daging empuk juicy. Kemasan lipat manual menjaga kerenyahan. Cocok untuk bisnis fast food atau cafe." }
 ];
 
 function renderContoh(){
@@ -310,11 +469,14 @@ function renderContoh(){
 function showContohModal(i){
     let m=document.getElementById('modal'), mt=document.getElementById('modalTitle'), mi=document.getElementById('modalImage'), mm=document.getElementById('modalMessage'), mw=document.getElementById('modalWaLink');
     mt.innerText="💡 Inspirasi: "+i.nama;
-    mi.innerHTML=`<img src="${i.gambar}" alt="${i.nama}" onerror="this.src='https://placehold.co/500x500/1b5e3f/white?text=${i.nama}'">`;
+    mi.src=i.gambar;
+    mi.alt=i.nama;
+    mi.onerror=function(){ this.src='https://placehold.co/500x500/1b5e3f/white?text='+i.nama; };
     let txt=`${i.narasi}\n\n✨ Tertarik membuat kemasan seperti ini? BungkusKita siap membantu desain & cetak!\n\nKlik tombol di bawah untuk konsultasi gratis.`;
     mm.innerHTML=txt.replace(/\n/g,'<br>');
-    mw.onclick=(e)=>{ e.preventDefault(); window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(`Halo BungkusKita, saya tertarik dengan kemasan para ${i.nama}. Mohon info desain dan harga.`)}`,'_blank'); };
+    mw.onclick=(e)=>{ e.preventDefault(); window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(`Halo BungkusKita, saya tertarik dengan kemasan untuk ${i.nama}. Mohon info desain dan harga.`)}`,'_blank'); };
     m.classList.add('active');
+    resetZoom();
 }
 
 // ========== BAHAN ==========
@@ -337,10 +499,13 @@ function renderBahan(){
 function showBahanModal(b){
     let m=document.getElementById('modal'), mt=document.getElementById('modalTitle'), mi=document.getElementById('modalImage'), mm=document.getElementById('modalMessage'), mw=document.getElementById('modalWaLink');
     mt.innerText=b.nama;
-    mi.innerHTML=`<img src="${b.gambar}" alt="${b.nama}" onerror="this.src='https://placehold.co/500x500/1b5e3f/white?text=${b.nama}'">`;
+    mi.src=b.gambar;
+    mi.alt=b.nama;
+    mi.onerror=function(){ this.src='https://placehold.co/500x500/1b5e3f/white?text='+b.nama; };
     mm.innerHTML=`<strong>📝 ${b.deskripsi}</strong><br><br>📊 ${b.spesifikasi}<br><br>✨ Tertarik dengan bahan ini? Klik tombol di bawah untuk konsultasi.`;
     mw.onclick=(e)=>{ e.preventDefault(); window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(`Halo BungkusKita, saya tertarik dengan bahan ${b.nama} (${b.spesifikasi}). Mohon info lebih lanjut dan contohnya.`)}`,'_blank'); };
     m.classList.add('active');
+    resetZoom();
 }
 
 // ========== LAYANAN ==========
@@ -362,10 +527,13 @@ function renderLayanan(){
 function showLayananModal(l){
     let m=document.getElementById('modal'), mt=document.getElementById('modalTitle'), mi=document.getElementById('modalImage'), mm=document.getElementById('modalMessage'), mw=document.getElementById('modalWaLink');
     mt.innerText=l.nama;
-    mi.innerHTML=`<img src="${l.gambar}" alt="${l.nama}" onerror="this.src='https://placehold.co/500x500/1b5e3f/white?text=${l.nama}'">`;
+    mi.src=l.gambar;
+    mi.alt=l.nama;
+    mi.onerror=function(){ this.src='https://placehold.co/500x500/1b5e3f/white?text='+l.nama; };
     mm.innerHTML=`<strong>📝 ${l.deskripsi}</strong><br><br><strong>Fitur:</strong><br>${l.fitur.replace(/\n/g,'<br>')}<br><br>✨ Tertarik dengan layanan ini? Klik tombol di bawah untuk konsultasi.`;
     mw.onclick=(e)=>{ e.preventDefault(); window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(`Halo BungkusKita, saya tertarik dengan layanan ${l.nama}. Mohon info lebih lanjut dan harga.`)}`,'_blank'); };
     m.classList.add('active');
+    resetZoom();
 }
 
 // ========== MENU ==========
@@ -381,10 +549,14 @@ document.querySelectorAll('.menu-link').forEach(l=>{ l.addEventListener('click',
 document.querySelectorAll('.scroll-indicator').forEach(i=>{ i.addEventListener('click',()=>{ if(cont) cont.scrollTo({top:cont.scrollTop+window.innerHeight,behavior:'smooth'}); }); });
 
 let modal=document.getElementById('modal'), modalClose=document.querySelector('.modal-close');
-function closeModal(){ modal.classList.remove('active'); }
+function closeModal(){ 
+    modal.classList.remove('active'); 
+    resetZoom(); 
+}
 if(modalClose) modalClose.addEventListener('click',closeModal);
 modal.addEventListener('click',(e)=>{ if(e.target===modal) closeModal(); });
 
+initZoomFeature();
 renderProduk();
 renderBahan();
 renderLayanan();
