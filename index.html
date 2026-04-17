@@ -208,7 +208,7 @@
         <div class="section-content">
             <div class="content-wrapper">
                 <h2 class="fade-up">💡 <span>Inspirasi Kemasan</span></h2>
-                <p class="section-subtitle fade-up delay-1">10 kuliner yang cocok dikemas dengan model DIE CUT (tanpa lem) - praktis, cepat, rapi!</p>
+                <p class="section-subtitle fade-up delay-1">10 kuliner yang cocok dikemas dengan sistem lipat manual - praktis, cepat, rapi!</p>
                 <div class="contoh-grid fade-up delay-2" id="contohGrid"></div>
                 <p style="margin-top:15px; font-size:.7rem; opacity:.7;">✨ Klik gambar untuk melihat detail & inspirasi ✨</p>
             </div>
@@ -256,7 +256,6 @@ const produkData = [
     { id:3, nama:"Lunch Box Size L", ukuranBox:"12 x 20 cm", bahan:"Kraft PE 290 Gr", isiPerPack:100, isiPerIkat:5, beratPerPack:0.85, beratPerIkat:4.25, jenis:"Lunch Box", gambar:"images/produk/produk-lunchbox-l.jpg" },
     { id:4, nama:"Box Snack Size S", ukuranBox:"12 x 12 x 6,5 cm", bahan:"Duplek 250 Gr", isiPerPack:100, isiPerIkat:5, beratPerPack:2.31, beratPerIkat:11.55, jenis:"Die Cut - Tanpa Lem", gambar:"images/produk/produk-box-snack-12.jpg" },
     { id:5, nama:"Box Snack Size L", ukuranBox:"12 x 16 x 6,5 cm", bahan:"Duplek 250 Gr", isiPerPack:100, isiPerIkat:5, beratPerPack:2.79, beratPerIkat:13.95, jenis:"Die Cut - Tanpa Lem", gambar:"images/produk/produk-box-snack-16.jpg" },
-    // Box Martabak Size S: Bahan diubah jadi Kraft Laminasi 290 Gr
     { id:6, nama:"Box Martabak Size S", ukuranBox:"11 x 15 x 4 cm", bahan:"Kraft Laminasi 290 Gr", isiPerPack:100, isiPerIkat:5, beratPerPack:2.42, beratPerIkat:12.10, jenis:"Tutup Sambung", gambar:"images/produk/produk-box-martabak-10.jpg" },
     { id:7, nama:"Box Martabak Size L", ukuranBox:"13,5 x 21 x 4,2 cm", bahan:"Ivory 270 Gr", isiPerPack:100, isiPerIkat:5, beratPerPack:3.11, beratPerIkat:15.55, jenis:"Tutup Sambung", gambar:"images/produk/produk-box-martabak-13.jpg" },
     { id:8, nama:"Menu A4", ukuranBox:"21 x 29,7 cm", bahan:"Art Karton 300 Gr", isiPerPack:1, isiPerIkat:10, beratPerPack:0.19, beratPerIkat:1.9, jenis:"Display", gambar:"images/produk/produk-menu-a4.jpg" },
@@ -286,7 +285,6 @@ function showProductModal(id){
 }
 
 // ========== INSPIRASI KEMASAN (10 PRODUK) ==========
-// Nama file gambar sudah diganti menjadi lebih spesifik
 const contohData = [
     { nama:"Martabak Manis", gambar:"images/contoh/contoh-martabak-manis.jpg", narasi:"Martabak manis legendaris dari Timur Tengah, populer di Indonesia. Rasa legit dengan topping meses, keju, kacang. Boks die cut tanpa lem menjaga kehangatan & tekstur." },
     { nama:"Pisang Goreng Crispy", gambar:"images/contoh/contoh-pisang-goreng.jpg", narasi:"Pisang goreng crispy, camilan favorit semua kalangan. Kulit renyah, dalamnya manis lembut. Boks die cut tanpa lem menjaga kerenyahan lebih lama. Praktis untuk jualan pinggir jalan atau cafe." },
@@ -315,7 +313,7 @@ function showContohModal(i){
     mi.innerHTML=`<img src="${i.gambar}" alt="${i.nama}" onerror="this.src='https://placehold.co/500x500/1b5e3f/white?text=${i.nama}'">`;
     let txt=`${i.narasi}\n\n✨ Tertarik membuat kemasan seperti ini? BungkusKita siap membantu desain & cetak!\n\nKlik tombol di bawah untuk konsultasi gratis.`;
     mm.innerHTML=txt.replace(/\n/g,'<br>');
-    mw.onclick=(e)=>{ e.preventDefault(); window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(`Halo BungkusKita, saya tertarik dengan kemasan untuk ${i.nama}. Mohon info desain dan harga.`)}`,'_blank'); };
+    mw.onclick=(e)=>{ e.preventDefault(); window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(`Halo BungkusKita, saya tertarik dengan kemasan para ${i.nama}. Mohon info desain dan harga.`)}`,'_blank'); };
     m.classList.add('active');
 }
 
