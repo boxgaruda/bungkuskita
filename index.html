@@ -60,6 +60,11 @@
         .contoh-item:hover .contoh-image img{transform:scale(1.05)}
         .contoh-info{padding:12px;text-align:center}
         .contoh-info p{font-size:.75rem;font-weight:500;color:#fff}
+        .contoh-pagination{display:flex;justify-content:center;align-items:center;gap:15px;margin-top:20px;flex-wrap:wrap}
+        .contoh-page-btn{background:#ffb703;color:#2c1810;border:none;padding:8px 20px;border-radius:30px;font-weight:bold;cursor:pointer;transition:all .3s ease;font-size:.85rem}
+        .contoh-page-btn:hover{background:#e6a500;transform:scale(1.02)}
+        .contoh-page-btn:disabled{background:#ccc;cursor:not-allowed;transform:none}
+        .contoh-page-info{color:white;font-size:.85rem;background:rgba(0,0,0,.5);padding:5px 12px;border-radius:20px}
         .kontak-box{background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border-radius:20px;padding:15px;margin-bottom:15px;color:#fff}
         .kontak-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.2)}
         .kontak-item:last-child{border-bottom:none}
@@ -105,7 +110,7 @@
         .modal-image-area{flex:1;min-width:200px;text-align:center}
         .modal-info-area{flex:1.5;min-width:250px;text-align:left}
         .modal-product-image{width:100%;max-width:300px;height:auto;margin:0 auto;display:block;border-radius:14px;background:#e8f5e9;padding:8px;border:1px solid #a5d6a7}
-        .modal-product-image img{width:100%;height:auto;border-radius:10px;cursor:zoom-in}
+        .modal-product-image img{width:100%;height:auto;border-radius:10px}
         .info-detail{background:#e8f5e9;padding:12px;border-radius:14px;margin-bottom:15px;border:1px solid #a5d6a7}
         .info-detail p{margin:6px 0;color:#333;font-size:.85rem}
         .info-detail strong{color:#1b5e3f}
@@ -114,13 +119,11 @@
         .total-berat{background:#1b5e3f;padding:10px;border-radius:14px;text-align:center;font-weight:bold;margin:12px 0;color:#fff;font-size:.9rem}
         .btn-pesan-modal{display:inline-block;background:#25D366;color:#fff;padding:12px 20px;border-radius:50px;text-decoration:none;font-weight:600;margin-top:10px;width:100%;text-align:center;transition:all .2s;border:none;cursor:pointer;font-size:.9rem}
         .btn-pesan-modal:hover{background:#128C7E;transform:scale(1.01)}
-        .modal-product-image.zoomed{cursor:zoom-out}
-        .modal-product-image.zoomed img{transform:scale(1.5);cursor:grab}
         
-        /* MODAL INSPIRASI */
+        /* MODAL INSPIRASI - TOMBOL GESER TETAP, GAMBAR 120%, TANPA ZOOM */
         .modal-inspirasi{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:1100;justify-content:center;align-items:center}
         .modal-inspirasi.active{display:flex}
-        .modal-inspirasi .modal-content{background:#fff;padding:20px;border-radius:20px;max-width:650px;width:90%;text-align:center;max-height:85vh;overflow-y:auto;border:1px solid #a5d6a7;box-shadow:0 10px 30px rgba(0,0,0,.2);position:relative}
+        .modal-inspirasi .modal-content{background:#fff;padding:20px;border-radius:20px;max-width:90vw;width:90%;text-align:center;max-height:85vh;overflow-y:auto;border:1px solid #a5d6a7;box-shadow:0 10px 30px rgba(0,0,0,.2);position:relative}
         .modal-inspirasi .modal-close{position:absolute;top:15px;right:20px;font-size:28px;cursor:pointer;color:#666;transition:all .2s;z-index:10}
         .modal-inspirasi .modal-close:hover{color:#1b5e3f}
         .modal-inspirasi h3{color:#1b5e3f;margin:0 0 10px 0;font-size:1.2rem;border-bottom:2px solid #ffb703;display:inline-block;padding-bottom:5px}
@@ -129,24 +132,12 @@
         .inspirasi-nav-btn:hover{background:#e6a500;transform:scale(1.05)}
         .inspirasi-nav-btn:disabled{background:#ccc;cursor:not-allowed;transform:none}
         .inspirasi-counter{color:#1b5e3f;font-weight:bold;background:#e8f5e9;padding:5px 12px;border-radius:20px;font-size:.85rem}
-        .modal-inspirasi .modal-product-image{width:100%;height:auto;margin:10px auto;display:block;border-radius:14px;background:#e8f5e9;padding:8px;border:1px solid #a5d6a7;overflow:auto}
-        .modal-inspirasi .modal-product-image img{width:100%;height:auto;border-radius:10px}
+        /* GAMBAR INSPIRASI 120% - PERLU SCROLL HORIZONTAL */
+        .modal-inspirasi .modal-product-image{width:100%;height:auto;margin:10px auto;display:block;border-radius:14px;background:#e8f5e9;padding:8px;border:1px solid #a5d6a7;overflow:auto;text-align:center}
+        .modal-inspirasi .modal-product-image img{width:120%;height:auto;border-radius:10px;display:block;margin:0 auto}
         .modal-inspirasi .info-detail{background:#e8f5e9;padding:12px;border-radius:14px;margin:15px 0;border:1px solid #a5d6a7;text-align:left;line-height:1.3}
         .modal-inspirasi .info-detail p{margin:5px 0;color:#333;font-size:.85rem;line-height:1.3}
         .modal-inspirasi .btn-pesan-modal{display:inline-block;background:#25D366;color:#fff;padding:10px 20px;border-radius:50px;text-decoration:none;font-weight:600;margin-top:10px;width:100%;text-align:center}
-        
-        /* UKURAN GAMBAR PRODUK DI HP - 80% */
-        @media(max-width:767px){
-            .modal-product-image{width:80%;max-width:240px}
-        }
-        
-        /* UKURAN GAMBAR INSPIRASI: PC 110%, HP 90% */
-        @media(min-width:768px){
-            .modal-inspirasi .modal-product-image img{width:110%;max-width:110%;margin-left:-5%}
-        }
-        @media(max-width:767px){
-            .modal-inspirasi .modal-product-image img{width:90%;margin:0 auto}
-        }
         
         .fade-up{opacity:0;transform:translateY(30px);animation:fadeUp .8s ease forwards}
         @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
@@ -163,8 +154,9 @@
             .produk-item span{font-size:.8rem}
             .contoh-image{height:180px}
             .pagination{display:none}
+            .contoh-pagination{display:none}
             .modal-produk .modal-content{max-width:900px}
-            .modal-inspirasi .modal-content{max-width:700px}
+            .modal-inspirasi .modal-content{max-width:800px}
         }
         
         @media(max-width:767px){
@@ -177,8 +169,10 @@
             .modal-image-area{min-width:auto}
             .modal-info-area{min-width:auto}
             .pagination{display:flex}
+            .contoh-pagination{display:flex}
             .produk-nav-btn{width:35px;height:35px;font-size:1rem}
             .inspirasi-nav-btn{width:35px;height:35px;font-size:1rem}
+            .modal-product-image{width:80%;max-width:240px}
         }
         
         @media(min-width:1024px){h1,h2{font-size:3rem}}
@@ -284,6 +278,11 @@
                 <h2 class="fade-up">💡 <span>Inspirasi Kemasan</span></h2>
                 <p class="section-subtitle fade-up delay-1">10 kuliner yang cocok dikemas dengan sistem lipat manual - praktis, cepat, rapi!</p>
                 <div class="contoh-grid fade-up delay-2" id="contohGrid"></div>
+                <div class="contoh-pagination" id="contohPagination">
+                    <button id="contohPrevBtn" class="contoh-page-btn" disabled>◀ Previous</button>
+                    <span id="contohPageInfo" class="contoh-page-info">Halaman 1 dari 2</span>
+                    <button id="contohNextBtn" class="contoh-page-btn">Next ▶</button>
+                </div>
                 <p style="margin-top:15px; font-size:.7rem; opacity:.7;">✨ Klik gambar untuk melihat detail & inspirasi ✨</p>
             </div>
         </div>
@@ -379,7 +378,7 @@ const semuaProduk = [
     { id:15, nama:"Produk Nota", ukuranBox:"Custom", bahan:"HVS 70 Gr / NCR", isiPerPack:1, isiPerIkat:10, beratPerPack:0.02, beratPerIkat:0.10, jenis:"Perlengkapan Usaha", gambar:"images/produk/produk-nota.jpg" }
 ];
 
-// PAGINATION (HP) - 6 produk per halaman
+// PAGINATION PRODUK (HP)
 const produkPerHalaman = 6;
 let currentPage = 1;
 const totalPages = Math.ceil(semuaProduk.length / produkPerHalaman);
@@ -451,8 +450,17 @@ function updateProdukModal(){
             <p><strong>🔧 Model:</strong> ${cp.jenis}</p>
             <p><strong>📦 Isi per Pack:</strong> ${cp.isiPerPack} pcs</p>
             <p><strong>📦 Isi per Ikat:</strong> ${cp.isiPerIkat} pack = ${cp.isiPerIkat * cp.isiPerPack} pcs</p>
+    `;
+    
+    // Tampilkan berat hanya di PC (lebar layar >= 768px)
+    if (window.innerWidth >= 768) {
+        infoDetail += `
             <p><strong>⚖️ Berat per Pack:</strong> ${beratPerPack.toFixed(2)} kg</p>
             <p><strong>⚖️ Berat per Ikat:</strong> ${beratPerIkat} kg</p>
+        `;
+    }
+    
+    infoDetail += `
         </div>
         <label>📦 Jumlah Pesanan (dalam pack):</label>
         <input type="number" id="jumlahPack" min="1" value="1">
@@ -507,24 +515,6 @@ function resetZoomProduk() {
     }
 }
 
-function initZoomProduk() {
-    const imageContainer = document.getElementById('modalProdukImageContainer');
-    const modalImage = document.getElementById('modalProdukImage');
-    if (!imageContainer || !modalImage) return;
-    imageContainer.addEventListener('click', function(e) {
-        if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') return;
-        if (!imageContainer.classList.contains('zoomed')) {
-            modalImage.style.transform = 'scale(1.5)';
-            imageContainer.style.cursor = 'zoom-out';
-            imageContainer.classList.add('zoomed');
-        } else {
-            modalImage.style.transform = 'scale(1)';
-            imageContainer.style.cursor = 'zoom-in';
-            imageContainer.classList.remove('zoomed');
-        }
-    });
-}
-
 // ========== INSPIRASI KEMASAN ==========
 const contohData = [
     { nama:"Martabak Manis", gambar:"images/contoh/contoh-martabak-manis.jpg", narasi:"Martabak manis legendaris dari Timur Tengah, populer di Indonesia. Rasa legit dengan topping meses, keju, kacang. Kemasan lipat manual menjaga kehangatan & tekstur." },
@@ -539,17 +529,42 @@ const contohData = [
     { nama:"Fried Chicken", gambar:"images/contoh/contoh-fried-chicken.jpg", narasi:"Fried chicken, ayam goreng crispy favorit semua umur. Kulit renyah, daging empuk juicy. Kemasan lipat manual menjaga kerenyahan. Cocok untuk bisnis fast food atau cafe." }
 ];
 
-let inspirasiIndex = 0;
+// PAGINATION INSPIRASI (HP)
+const inspirasiPerHalaman = 6;
+let inspirasiPage = 1;
+const totalInspirasiPages = Math.ceil(contohData.length / inspirasiPerHalaman);
 
-function renderContoh(){
-    let g = document.getElementById('contohGrid'); if(!g) return; g.innerHTML = '';
-    contohData.forEach((item, idx) => {
+function getInspirasiForPage(page) {
+    const start = (page - 1) * inspirasiPerHalaman;
+    const end = start + inspirasiPerHalaman;
+    return contohData.slice(start, end);
+}
+
+function renderContoh() {
+    const grid = document.getElementById('contohGrid');
+    if (!grid) return;
+    let inspirasiTampil;
+    if (isMobile()) {
+        inspirasiTampil = getInspirasiForPage(inspirasiPage);
+        document.getElementById('contohPageInfo').innerText = `Halaman ${inspirasiPage} dari ${totalInspirasiPages}`;
+        document.getElementById('contohPrevBtn').disabled = (inspirasiPage === 1);
+        document.getElementById('contohNextBtn').disabled = (inspirasiPage === totalInspirasiPages);
+    } else {
+        inspirasiTampil = contohData;
+    }
+    grid.innerHTML = '';
+    inspirasiTampil.forEach((item, idx) => {
         let c = document.createElement('div'); c.className = 'contoh-item';
         c.innerHTML = `<div class="contoh-image"><img src="${item.gambar}" alt="${item.nama}" onerror="this.src='https://placehold.co/1000x667/1b5e3f/white?text=${item.nama}'"></div><div class="contoh-info"><p>🍽️ ${item.nama}</p></div>`;
-        c.onclick = () => showInspirasiModal(idx);
-        g.appendChild(c);
+        c.onclick = () => showInspirasiModal(contohData.indexOf(item));
+        grid.appendChild(c);
     });
 }
+
+function inspirasiPrevPage() { if (inspirasiPage > 1) { inspirasiPage--; renderContoh(); } }
+function inspirasiNextPage() { if (inspirasiPage < totalInspirasiPages) { inspirasiPage++; renderContoh(); } }
+
+let inspirasiIndex = 0;
 
 function showInspirasiModal(index){
     inspirasiIndex = index;
@@ -707,8 +722,9 @@ document.getElementById('produkPrevBtn').addEventListener('click', produkPrev);
 document.getElementById('produkNextBtn').addEventListener('click', produkNext);
 document.getElementById('inspirasiPrevBtn').addEventListener('click', inspirasiPrev);
 document.getElementById('inspirasiNextBtn').addEventListener('click', inspirasiNext);
+document.getElementById('contohPrevBtn').addEventListener('click', inspirasiPrevPage);
+document.getElementById('contohNextBtn').addEventListener('click', inspirasiNextPage);
 
-initZoomProduk();
 renderProduk();
 renderBahan();
 renderLayanan();
