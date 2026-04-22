@@ -822,38 +822,23 @@ function updateProdukModal(){
             window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(message)}`, '_blank'); 
         };
     }
-    else if (cp.tipe === "nota") {
-        infoDetail = `
-            <div class="info-detail">
-                <p><strong>📏 Ukuran:</strong> ${cp.ukuranBox}</p>
-                <p><strong>📄 Bahan:</strong> ${cp.bahan}</p>
-                <p><strong>🔧 Model:</strong> ${cp.jenis}</p>
-                <p><strong>📖 Isi Buku:</strong> ${cp.isiBuku}</p>
-                <p><strong>💰 Harga per Buku:</strong> Rp ${cp.hargaPerBuku.toLocaleString('id-ID')}</p>
-            </div>
-            <label>📦 Jumlah Buku:</label>
-            <input type="number" id="jumlahBuku" min="1" value="1">
-            <div id="totalHargaDisplay" class="total-harga">💰 Total Harga: Rp 0</div>
-            <p style="font-size:0.7rem; color:#666; margin-top:10px;">💡 Harga sudah termasuk cetak 1 sisi</p>
-        `;
-        
-        setTimeout(() => {
-            const jumlahInput = document.getElementById('jumlahBuku');
-            if (jumlahInput) {
-                jumlahInput.removeEventListener('input', updateTotalHargaNota);
-                jumlahInput.addEventListener('input', () => updateTotalHargaNota(cp.hargaPerBuku));
-                updateTotalHargaNota(cp.hargaPerBuku);
-            }
-        }, 10);
-        
-        mw.onclick = (e) => { 
-            e.preventDefault(); 
-            const jumlahBuku = parseInt(document.getElementById('jumlahBuku')?.value || 1);
-            const totalHarga = cp.hargaPerBuku * jumlahBuku;
-            let message = `Halo BungkusKita, saya tertarik dengan produk:\n${cp.nama}\n📏 Ukuran: ${cp.ukuranBox}\n📄 Bahan: ${cp.bahan}\n📖 Isi Buku: ${cp.isiBuku}\n📦 Jumlah: ${jumlahBuku} buku\n💰 Total Harga: Rp ${totalHarga.toLocaleString('id-ID')}\n\nMohon info ketersediaan. Terima kasih.`;
-            window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(message)}`, '_blank'); 
-        };
-    }
+   else if (cp.tipe === "nota") {
+    infoDetail = `
+        <div class="info-detail">
+            <p><strong>📏 Ukuran:</strong> ${cp.ukuranBox}</p>
+            <p><strong>📄 Bahan:</strong> ${cp.bahan}</p>
+            <p><strong>🔧 Model:</strong> ${cp.jenis}</p>
+            <p><strong>📖 Isi Buku:</strong> ${cp.isiBuku}</p>
+        </div>
+        <p style="font-size:0.75rem; color:#666; margin-top:5px;">💡 Klik tombol di bawah untuk tanya harga & pesan</p>
+    `;
+    
+    mw.onclick = (e) => { 
+        e.preventDefault(); 
+        let message = `Halo BungkusKita, saya tertarik dengan produk:\n${cp.nama}\n📏 Ukuran: ${cp.ukuranBox}\n📄 Bahan: ${cp.bahan}\n📖 Isi Buku: ${cp.isiBuku}\n\nMohon info harga dan ketersediaan. Terima kasih.`;
+        window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(message)}`, '_blank'); 
+    };
+}
     
     mDetail.innerHTML = infoDetail;
     counter.innerText = `${produkIndex + 1} / ${semuaProduk.length}`;
@@ -864,13 +849,6 @@ function updateProdukModal(){
     if (nextBtn) nextBtn.disabled = (produkIndex === semuaProduk.length - 1);
     
     setupImageZoom(mi);
-}
-
-function updateTotalHargaNota(hargaPerBuku) {
-    const jumlah = parseInt(document.getElementById('jumlahBuku')?.value || 1);
-    const totalHarga = hargaPerBuku * jumlah;
-    const display = document.getElementById('totalHargaDisplay');
-    if (display) display.innerHTML = `💰 Total Harga: Rp ${totalHarga.toLocaleString('id-ID')}`;
 }
 
 function produkPrev() { if (produkIndex > 0) { produkIndex--; updateProdukModal(); } }
