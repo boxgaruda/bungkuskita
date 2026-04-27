@@ -8,7 +8,7 @@
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         body{font-family:'Inter','Segoe UI',sans-serif;overflow-x:hidden;background:#0a2a1a}
-        .sections-container{scroll-snap-type:y mandatory;overflow-y:scroll;height:100vh;scroll-behavior:smooth}
+        .sections-container{scroll-snap-type:y mandatory;overflow-y:auto;height:100vh;scroll-behavior:smooth}
         .section{position:relative;width:100%;height:100vh;scroll-snap-align:start;overflow:hidden}
         .section-bg{position:absolute;top:0;left:0;width:100%;height:100%;background-size:cover;background-position:center 30%;background-repeat:no-repeat;z-index:0}
         .section-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,rgba(0,0,0,.65)0%,rgba(0,0,0,.45)100%);z-index:1}
@@ -133,14 +133,14 @@
         .btn-pesan-modal{display:inline-block;background:#25D366;color:#fff;padding:12px 20px;border-radius:50px;text-decoration:none;font-weight:600;margin-top:10px;width:100%;text-align:center;transition:all .2s;border:none;cursor:pointer;font-size:.9rem}
         .btn-pesan-modal:hover{background:#128C7E;transform:scale(1.01)}
         
-        /* MODAL INSPIRASI - JUDUL & COUNTER 1 BARIS */
+        /* MODAL INSPIRASI */
         .modal-inspirasi{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.9);z-index:1100;justify-content:center;align-items:center}
         .modal-inspirasi.active{display:flex}
-        .modal-inspirasi .modal-content{background:#fff;padding:20px;border-radius:20px;max-width:800px;width:90%;border:1px solid #a5d6a7;box-shadow:0 10px 30px rgba(0,0,0,.2);position:relative;display:flex;flex-direction:column;max-height:90vh}
+        .modal-inspirasi .modal-content{background:#fff;padding:20px;border-radius:20px;max-width:800px;width:90%;text-align:center;max-height:85vh;overflow-y:auto;border:1px solid #a5d6a7;box-shadow:0 10px 30px rgba(0,0,0,.2);position:relative}
         .modal-inspirasi .modal-close{position:absolute;top:15px;right:20px;font-size:28px;cursor:pointer;color:#666;transition:all .2s;z-index:10}
         .modal-inspirasi .modal-close:hover{color:#1b5e3f}
+        .modal-inspirasi h3{color:#1b5e3f;margin:0 0 10px 0;font-size:1.2rem;border-bottom:2px solid #ffb703;display:inline-block;padding-bottom:5px}
         
-        /* HEADER: JUDUL + COUNTER DALAM 1 BARIS */
         .inspirasi-header {
             display: flex;
             justify-content: space-between;
@@ -156,6 +156,10 @@
             font-size: 1.2rem;
             border-bottom: none;
             padding-bottom: 0;
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .inspirasi-counter {
@@ -170,7 +174,6 @@
             margin-right: 40px;
         }
         
-        /* SLIDER CONTAINER */
         .inspirasi-slider-container {
             display: flex;
             align-items: center;
@@ -231,7 +234,6 @@
             cursor: zoom-out;
         }
         
-        /* NARASI BOX */
         .inspirasi-narasi-box {
             background: #e8f5e9;
             padding: 15px;
@@ -255,7 +257,6 @@
             margin: 0 0 10px 0;
         }
         
-        /* TOMBOL WA - FLEX SHRINK 0 AGAR TIDAK TERDORONG */
         .btn-pesan-modal {
             flex-shrink: 0;
         }
@@ -265,7 +266,35 @@
         .loading-spinner::after{content:"";width:30px;height:30px;border:3px solid #ffb703;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;margin-left:10px}
         @keyframes spin{to{transform:rotate(360deg)}}
         
-        /* RESPONSIVE */
+        /* PC - nonaktifkan scroll snap agar menu bisa diklik */
+        @media(min-width:768px){
+            h1,h2{font-size:2.5rem}.tagline{font-size:1.1rem}
+            
+            /* NONAKTIFKAN SCROLL SNAP DI PC */
+            .sections-container {
+                scroll-snap-type: none;
+                overflow-y: auto;
+                height: 100vh;
+            }
+            .section {
+                scroll-snap-align: none;
+                height: 100vh;
+                min-height: 100vh;
+            }
+            
+            /* PC: 4 KOLOM */
+            .produk-grid{grid-template-columns:repeat(4,1fr);gap:15px}
+            .bahan-grid{grid-template-columns:repeat(4,1fr);gap:15px}
+            .layanan-grid{grid-template-columns:repeat(3,1fr);gap:20px}
+            .contoh-grid{grid-template-columns:repeat(5,1fr);gap:20px}
+            .content-wrapper{max-width:800px}
+            .produk-icon-img{width:100px;height:100px}
+            .produk-item span{font-size:.8rem}
+            .contoh-image{height:180px}
+            .modal-produk .modal-content{max-width:900px}
+            .modal-inspirasi .modal-content{max-width:700px;max-height:85vh}
+        }
+        
         @media(max-width:767px){
             .modal-inspirasi .modal-content{max-width:95vw;max-height:90vh}
             .contoh-grid{grid-template-columns:repeat(2,1fr);gap:12px}
@@ -282,21 +311,6 @@
             .inspirasi-image-box{max-width:250px;padding:10px}
             .inspirasi-header h3{font-size:1rem}
             .inspirasi-counter{font-size:.7rem;padding:3px 8px}
-        }
-        
-        @media(min-width:768px){
-            h1,h2{font-size:2.5rem}.tagline{font-size:1.1rem}
-            /* PC: 4 KOLOM */
-            .produk-grid{grid-template-columns:repeat(4,1fr);gap:15px}
-            .bahan-grid{grid-template-columns:repeat(4,1fr);gap:15px}
-            .layanan-grid{grid-template-columns:repeat(3,1fr);gap:20px}
-            .contoh-grid{grid-template-columns:repeat(5,1fr);gap:20px}
-            .content-wrapper{max-width:800px}
-            .produk-icon-img{width:100px;height:100px}
-            .produk-item span{font-size:.8rem}
-            .contoh-image{height:180px}
-            .modal-produk .modal-content{max-width:900px}
-            .modal-inspirasi .modal-content{max-width:700px;max-height:85vh}
         }
         
         @media(min-width:1024px){h1,h2{font-size:3rem}}
@@ -366,7 +380,7 @@
                 </div>
                 <div class="pagination" id="pagination">
                     <button id="prevBtn" class="page-btn" disabled>◀ Previous</button>
-                    <span id="pageInfo" class="page-info">Halaman 1 dari 2</span>
+                    <span id="pageInfo" class="page-info">Halaman 1 dari 3</span>
                     <button id="nextBtn" class="page-btn">Next ▶</button>
                 </div>
             </div>
@@ -463,18 +477,14 @@
     </div>
 </div>
 
-<!-- MODAL INSPIRASI - JUDUL & COUNTER 1 BARIS -->
+<!-- MODAL INSPIRASI -->
 <div id="modalInspirasi" class="modal-inspirasi">
     <div class="modal-content">
         <span class="modal-close">&times;</span>
-        
-        <!-- HEADER: JUDUL + COUNTER DALAM 1 BARIS -->
         <div class="inspirasi-header">
             <h3 id="modalInspirasiTitle">💡 Inspirasi: Martabak Manis</h3>
             <span id="inspirasiCounter" class="inspirasi-counter">1 / 10</span>
         </div>
-        
-        <!-- SLIDER DENGAN TOMBOL KIRI KANAN -->
         <div class="inspirasi-slider-container">
             <button id="inspirasiPrevBtn" class="inspirasi-nav-btn inspirasi-prev">◀</button>
             <div class="inspirasi-image-box">
@@ -482,12 +492,9 @@
             </div>
             <button id="inspirasiNextBtn" class="inspirasi-nav-btn inspirasi-next">▶</button>
         </div>
-        
-        <!-- NARASI -->
         <div class="inspirasi-narasi-box">
             <div id="modalInspirasiDetail" class="inspirasi-narasi-text"></div>
         </div>
-        
         <a href="#" id="modalInspirasiWaLink" class="btn-pesan-modal" target="_blank">📞 Tanya Harga & Pesan via WhatsApp</a>
     </div>
 </div>
@@ -497,8 +504,13 @@
 let semuaProduk = [];
 let produkLoaded = false;
 
-// PAGINATION PRODUK - 8 PRODUK PER HALAMAN (untuk semua device)
-let produkPerHalaman = 8;
+// CEK DEVICE
+function isMobile() {
+    return window.innerWidth < 768;
+}
+
+// PAGINATION PRODUK - HP: 6 produk, PC: 8 produk
+let produkPerHalaman = isMobile() ? 6 : 8;
 let currentPage = 1;
 let totalPages = 1;
 
@@ -512,12 +524,19 @@ function renderProduk() {
     const grid = document.getElementById('produkGrid');
     if (!grid) return;
     
+    // Update produkPerHalaman saat resize
+    produkPerHalaman = isMobile() ? 6 : 8;
+    totalPages = Math.ceil(semuaProduk.length / produkPerHalaman);
+    
     if (!produkLoaded || semuaProduk.length === 0) {
         grid.innerHTML = '<div class="loading-spinner">Memuat produk...</div>';
         return;
     }
     
-    // SEMUA DEVICE PAKAI PAGINATION
+    // Pastikan currentPage tidak melebihi totalPages
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+    
     const produkTampil = getProdukForPage(currentPage);
     document.getElementById('pageInfo').innerText = `Halaman ${currentPage} dari ${totalPages}`;
     document.getElementById('prevBtn').disabled = (currentPage === 1);
@@ -551,6 +570,7 @@ async function loadProducts() {
         semuaProduk = data.produk || [];
         produkLoaded = true;
         
+        produkPerHalaman = isMobile() ? 6 : 8;
         totalPages = Math.ceil(semuaProduk.length / produkPerHalaman);
         currentPage = 1;
         
@@ -585,7 +605,7 @@ const contohData = [
 const inspirasiPerHalaman = 4;
 let inspirasiPage = 1;
 const totalInspirasiPages = Math.ceil(contohData.length / inspirasiPerHalaman);
-let isMobile = window.innerWidth < 768;
+let isMobileDevice = window.innerWidth < 768;
 
 function getInspirasiForPage(page) {
     const start = (page - 1) * inspirasiPerHalaman;
@@ -597,7 +617,7 @@ function renderContoh() {
     const grid = document.getElementById('contohGrid');
     if (!grid) return;
     let inspirasiTampil;
-    if (isMobile) {
+    if (isMobileDevice) {
         inspirasiTampil = getInspirasiForPage(inspirasiPage);
         document.getElementById('contohPageInfo').innerText = `Halaman ${inspirasiPage} dari ${totalInspirasiPages}`;
         document.getElementById('contohPrevBtn').disabled = (inspirasiPage === 1);
@@ -648,7 +668,6 @@ function updateInspirasiModal(){
     };
     counter.innerText = `${inspirasiIndex + 1} / ${contohData.length}`;
     
-    // Update status tombol panah kiri kanan
     const prevBtn = document.getElementById('inspirasiPrevBtn');
     const nextBtn = document.getElementById('inspirasiNextBtn');
     if (prevBtn) prevBtn.disabled = (inspirasiIndex === 0);
@@ -822,23 +841,22 @@ function updateProdukModal(){
             window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(message)}`, '_blank'); 
         };
     }
-   else if (cp.tipe === "nota") {
-    infoDetail = `
-        <div class="info-detail">
-            <p><strong>📏 Ukuran:</strong> ${cp.ukuranBox}</p>
-            <p><strong>📄 Bahan:</strong> ${cp.bahan}</p>
-            <p><strong>🔧 Model:</strong> ${cp.jenis}</p>
-            <p><strong>📖 Isi Buku:</strong> ${cp.isiBuku}</p>
-        </div>
-        <p style="font-size:0.75rem; color:#666; margin-top:5px;">💡 Klik tombol di bawah untuk tanya harga & pesan</p>
-    `;
-    
-    mw.onclick = (e) => { 
-        e.preventDefault(); 
-        let message = `Halo BungkusKita, saya tertarik dengan produk:\n${cp.nama}\n📏 Ukuran: ${cp.ukuranBox}\n📄 Bahan: ${cp.bahan}\n📖 Isi Buku: ${cp.isiBuku}\n\nMohon info harga dan ketersediaan. Terima kasih.`;
-        window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(message)}`, '_blank'); 
-    };
-}
+    else if (cp.tipe === "nota") {
+        infoDetail = `
+            <div class="info-detail">
+                <p><strong>📏 Ukuran:</strong> ${cp.ukuranBox}</p>
+                <p><strong>📄 Bahan:</strong> ${cp.bahan}</p>
+                <p><strong>🔧 Model:</strong> ${cp.jenis}</p>
+                <p><strong>📖 Isi Buku:</strong> ${cp.isiBuku}</p>
+            </div>
+            <p style="font-size:0.75rem; color:#666; margin-top:5px;">💡 Klik tombol di bawah untuk tanya harga & pesan</p>
+        `;
+        mw.onclick = (e) => { 
+            e.preventDefault(); 
+            let message = `Halo BungkusKita, saya tertarik dengan produk:\n${cp.nama}\n📏 Ukuran: ${cp.ukuranBox}\n📄 Bahan: ${cp.bahan}\n📖 Isi Buku: ${cp.isiBuku}\n\nMohon info harga dan ketersediaan. Terima kasih.`;
+            window.open(`https://wa.me/6285716967671?text=${encodeURIComponent(message)}`, '_blank'); 
+        };
+    }
     
     mDetail.innerHTML = infoDetail;
     counter.innerText = `${produkIndex + 1} / ${semuaProduk.length}`;
@@ -867,18 +885,24 @@ if (menuToggle) menuToggle.addEventListener('click', openMenu);
 if (menuClose) menuClose.addEventListener('click', closeMenu);
 if (menuOverlay) menuOverlay.addEventListener('click', closeMenu);
 
+// FUNGSI SCROLL KE SECTION (DIPERBAIKI UNTUK PC)
 const container = document.querySelector('.sections-container');
 function showSection(sectionId) {
     const target = document.getElementById(sectionId);
-    if (target && container) container.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+    if (target && container) {
+        container.scrollTo({ top: target.offsetTop, behavior: 'smooth' });
+    }
     closeMenu();
 }
+
 document.querySelectorAll('.menu-link').forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
-        showSection(link.getAttribute('href').substring(1));
+        const sectionId = link.getAttribute('href').substring(1);
+        showSection(sectionId);
     });
 });
+
 document.querySelectorAll('.scroll-indicator').forEach(ind => {
     ind.addEventListener('click', () => {
         if (container) container.scrollTo({ top: container.scrollTop + window.innerHeight, behavior: 'smooth' });
@@ -918,8 +942,9 @@ document.getElementById('contohNextBtn').addEventListener('click', inspirasiNext
 
 // Resize handler
 window.addEventListener('resize', function() { 
-    isMobile = window.innerWidth < 768;
+    isMobileDevice = window.innerWidth < 768;
     renderContoh();
+    renderProduk();
 });
 
 // ========== INISIALISASI ==========
