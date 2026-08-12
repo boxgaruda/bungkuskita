@@ -197,16 +197,44 @@
             border-radius: 10px;
         }
 
-        @keyframes shine {
-            0% {
-                left: -100%;
-            }
-            20% {
-                left: 150%;
-            }
-            100% {
-                left: 150%;
-            }
+        /* LOGO DI KONTAK */
+        .logo-kontak-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-kontak {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            max-width: 160px;
+            border-radius: 12px;
+        }
+
+        .logo-kontak::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.4),
+                transparent
+            );
+            transform: skewX(-25deg);
+            animation: shine 4s infinite ease-in-out;
+            pointer-events: none;
+        }
+
+        .logo-kontak img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
         }
         
         /* MODAL KATALOG PRODUK */
@@ -387,6 +415,7 @@
             .inspirasi-counter{font-size:.7rem;padding:3px 8px}
             .menu-logo img{height:35px}
             .logo-utama img{max-width:150px}
+            .logo-kontak img{max-width:120px}
         }
         
         @media(min-width:768px){
@@ -538,6 +567,11 @@
         <div class="section-overlay"></div>
         <div class="section-content">
             <div class="content-wrapper">
+                <div class="logo-kontak-wrapper">
+                    <div class="logo-kontak">
+                        <img src="images/logo-tagmode.png" alt="Tagmode Logo">
+                    </div>
+                </div>
                 <h2 class="fade-up">Hubungi <span>Kami</span></h2>
                 <div class="kontak-box fade-up delay-1">
                     <div class="kontak-item"><div class="kontak-icon"><img src="images/kontak/icon-wa.png" alt="WA" class="kontak-img" onerror="this.src='https://placehold.co/50x50/25D366/white?text=WA'"></div><div><h3>WhatsApp</h3><a href="https://wa.me/628128619515" target="_blank">0812-8619-515</a></div></div>
@@ -606,8 +640,8 @@
 let semuaProduk = [];
 let produkLoaded = false;
 
-// PAGINATION PRODUK - 8 PRODUK PER HALAMAN
-let produkPerHalaman = 8;
+// ========== PAGINATION PRODUK - 6 UNTUK HP, 8 UNTUK PC ==========
+let produkPerHalaman = window.innerWidth < 768 ? 6 : 8;
 let currentPage = 1;
 let totalPages = 1;
 
@@ -1022,10 +1056,19 @@ document.getElementById('inspirasiNextBtn').addEventListener('click', inspirasiN
 document.getElementById('contohPrevBtn').addEventListener('click', inspirasiPrevPage);
 document.getElementById('contohNextBtn').addEventListener('click', inspirasiNextPage);
 
-// Resize handler
+// Resize handler untuk produk dan inspirasi
 window.addEventListener('resize', function() { 
     isMobile = window.innerWidth < 768;
     renderContoh();
+    
+    // Update produk per halaman saat resize
+    const newPerHalaman = window.innerWidth < 768 ? 6 : 8;
+    if (newPerHalaman !== produkPerHalaman) {
+        produkPerHalaman = newPerHalaman;
+        totalPages = Math.ceil(semuaProduk.length / produkPerHalaman);
+        currentPage = 1;
+        renderProduk();
+    }
 });
 
 // ========== INISIALISASI ==========
